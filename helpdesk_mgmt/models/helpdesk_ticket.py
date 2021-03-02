@@ -170,7 +170,8 @@ class HelpdeskTicket(models.Model):
 
         # Check if mail to the user has to be sent
         if vals.get('user_id') and res:
-            res.send_user_mail()
+            if vals.get('user_id') != self.env.user.id:
+                res.send_user_mail()
             res.message_subscribe(partner_ids=res.user_id.partner_id.ids)
         if (vals.get('partner_id') or vals.get('partner_email')) and res:
             res.send_partner_mail()
@@ -206,7 +207,8 @@ class HelpdeskTicket(models.Model):
         # Check if mail to the user has to be sent
         for ticket in self:
             if vals.get('user_id'):
-                ticket.send_user_mail()
+                if vals.get('user_id') != self.env.user.id:
+                    ticket.send_user_mail()
                 ticket.message_subscribe(partner_ids=ticket.user_id.partner_id.ids)
         return res
 
